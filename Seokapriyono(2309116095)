@@ -1,0 +1,312 @@
+Nama : Seokapriyono Bilo
+NIM : 2309116095
+Kelas : B
+~~~~~~~~~~~
+class Node:
+    def __init__(self, data=None):
+        self.data = data
+        self.next_node = None
+
+class PertaminaData:
+    def __init__(self):
+        self.head = None
+        self.tambah_data_default()
+
+    def tambah_data_default(self):
+        self.Tambah_data("Sedan", "Bensin", "B 1234 AB", 2020, 50, posisi="akhir")
+        self.Tambah_data("SUV", "Solar", "B 5678 CD", 2022, 60, posisi="akhir")
+        self.Tambah_data("Truk", "Solar", "B 9101 EF", 2018, 150, posisi="akhir")
+        self.Tambah_data("Motor", "Bensin", "B 2345 GH", 2021, 10, posisi="akhir")
+
+    def Tambah_data(self, jenis_kendaraan, bahan_bakar, plat_nomor, tahun_pembuatan, kapasitas_tangki, posisi="akhir"):
+        new_node = Node({
+            'jenis_kendaraan': jenis_kendaraan,
+            'bahan_bakar': bahan_bakar,
+            'plat_nomor': plat_nomor,
+            'tahun_pembuatan': tahun_pembuatan,
+            'kapasitas_tangki': kapasitas_tangki
+        })
+
+        if posisi == "awal":
+            new_node.next_node = self.head
+            self.head = new_node
+        elif posisi == "akhir":
+            if not self.head:
+                self.head = new_node
+            else:
+                current_node = self.head
+                while current_node.next_node:
+                    current_node = current_node.next_node
+                current_node.next_node = new_node
+        else:  # posisi == "antara"
+            if not self.head:
+                print("Tidak ada data kendaraan. Menambahkan di awal.")
+                self.head = new_node
+            elif posisi == 1:
+                new_node.next_node = self.head
+                self.head = new_node
+            else:
+                current_node = self.head
+                for _ in range(posisi - 2):
+                    if current_node is None:
+                        print("Posisi tidak valid. Menambahkan di akhir.")
+                        return
+                    current_node = current_node.next_node
+
+                new_node.next_node = current_node.next_node
+                current_node.next_node = new_node
+
+        print(f"Data kendaraan {jenis_kendaraan} berhasil ditambahkan di posisi {posisi}.")
+
+    def Lihat_data(self, sort_by='jenis_kendaraan', ascending=True):
+        if not self.head:
+            print("Tidak ada data kendaraan.")
+            return
+
+        sorted_list = self.merge_sort(self.head, sort_by, ascending)
+        print("Data Kendaraan:")
+        index = 1
+        current_node = sorted_list
+        while current_node:
+            data = current_node.data
+            print(f"{index}. Jenis: {data['jenis_kendaraan']}, Plat Nomor: {data['plat_nomor']}, Bahan Bakar: {data['bahan_bakar']}")
+            current_node = current_node.next_node
+            index += 1
+
+    def update_data(self, plat_nomor, new_bahan_bakar):
+        current_node = self.head
+        while current_node:
+            if current_node.data['plat_nomor'] == plat_nomor:
+                current_node.data['bahan_bakar'] = new_bahan_bakar
+                print(f"Data kendaraan dengan plat nomor {plat_nomor} berhasil diupdate.")
+                return
+            current_node = current_node.next_node
+        print(f"Tidak ada data kendaraan dengan plat nomor {plat_nomor}.")
+
+    def Hapus_data(self, plat_nomor, posisi="akhir"):
+        if not self.head:
+            print(f"Tidak ada data kendaraan dengan plat nomor {plat_nomor}.")
+            return
+
+        if posisi == "awal" or (posisi == "akhir" and self.head.data['plat_nomor'] == plat_nomor):
+            self.head = self.head.next_node
+            print(f"Data kendaraan dengan plat nomor {plat_nomor} berhasil dihapus.")
+            return
+
+        current_node = self.head
+        while current_node.next_node:
+            if posisi == "akhir" and current_node.next_node.data['plat_nomor'] == plat_nomor:
+                current_node.next_node = current_node.next_node.next_node
+                print(f"Data kendaraan dengan plat nomor {plat_nomor} berhasil dihapus.")
+                return
+            elif posisi == "antara" and current_node.data['plat_nomor'] == plat_nomor:
+                current_node.next_node = current_node.next_node.next_node
+                print(f"Data kendaraan dengan plat nomor {plat_nomor} berhasil dihapus.")
+                return
+            current_node = current_node.next_node
+
+        print(f"Tidak ada data kendaraan dengan plat nomor {plat_nomor}.")
+
+    def Cari_data(self, jenis_kendaraan=None, plat_nomor=None):
+        current_node = self.head
+        while current_node:
+            if jenis_kendaraan and plat_nomor:
+                if current_node.data['jenis_kendaraan'] == jenis_kendaraan and current_node.data['plat_nomor'] == plat_nomor:
+                    data = current_node.data
+                    print(f"Data ditemukan: Jenis: {data['jenis_kendaraan']}, Plat Nomor: {data['plat_nomor']}, Bahan Bakar: {data['bahan_bakar']}")
+                    return
+            elif jenis_kendaraan:
+                if current_node.data['jenis_kendaraan'] == jenis_kendaraan:
+                    data = current_node.data
+                    print(f"Data ditemukan: Jenis: {data['jenis_kendaraan']}, Plat Nomor: {data['plat_nomor']}, Bahan Bakar: {data['bahan_bakar']}")
+                    return
+            elif plat_nomor:
+                if current_node.data['plat_nomor'] == plat_nomor:
+                    data = current_node.data
+                    print(f"Data ditemukan: Jenis: {data['jenis_kendaraan']}, Plat Nomor: {data['plat_nomor']}, Bahan Bakar: {data['bahan_bakar']}")
+                    return
+            current_node = current_node.next_node
+
+    print("Tidak ada data kendaraan yang sesuai.")
+
+    def Tambah_data_di_posisi(self, jenis_kendaraan, bahan_bakar, plat_nomor, tahun_pembuatan, kapasitas_tangki, posisi):
+        new_node = Node({
+            'jenis_kendaraan': jenis_kendaraan,
+            'bahan_bakar': bahan_bakar,
+            'plat_nomor': plat_nomor,
+            'tahun_pembuatan': tahun_pembuatan,
+            'kapasitas_tangki': kapasitas_tangki
+        })
+
+        if posisi == 1:
+            new_node.next_node = self.head
+            self.head = new_node
+        else:
+            current_node = self.head
+            for _ in range(posisi - 2):
+                if current_node is None:
+                    print("Posisi tidak valid. Menambahkan di akhir.")
+                    return
+                current_node = current_node.next_node
+
+            new_node.next_node = current_node.next_node
+            current_node.next_node = new_node
+
+        print(f"Data kendaraan {jenis_kendaraan} berhasil ditambahkan di posisi {posisi}.")
+
+    def merge_sort(self, head, key='jenis_kendaraan', ascending=True):
+        if head is None or head.next_node is None:
+            return head
+
+        mid = self.get_mid(head)
+        next_mid = mid.next_node
+        mid.next_node = None
+
+        left = self.merge_sort(head, key, ascending)
+        right = self.merge_sort(next_mid, key, ascending)
+
+        return self.merge(left, right, key, ascending)
+
+    def merge(self, left, right, key, ascending):
+        if left is None:
+            return right
+        if right is None:
+            return left
+
+        if ascending:
+            if left.data[key] < right.data[key]:
+                result = left
+                result.next_node = self.merge(left.next_node, right, key, ascending)
+            else:
+                result = right
+                result.next_node = self.merge(left, right.next_node, key, ascending)
+        else:
+            if left.data[key] > right.data[key]:
+                result = left
+                result.next_node = self.merge(left.next_node, right, key, ascending)
+            else:
+                result = right
+                result.next_node = self.merge(left, right.next_node, key, ascending)
+
+        return result
+
+    def get_mid(self, head):
+        if head is None:
+            return head
+
+        slow = head
+        fast = head
+
+        while fast.next_node and fast.next_node.next_node:
+            slow = slow.next_node
+            fast = fast.next_node.next_node
+
+        return slow
+
+    def Menu_utama(self):
+        while True:
+            print("\n=== DATA PERTAMINA ===")
+            print("1. Tambah Data")
+            print("2. Lihat Data")
+            print("3. Update Data")
+            print("4. Hapus Data")
+            print("5. Cari Data")
+            print("6. Tambah Data di Posisi")
+            print("7. Jump Search")
+            print("0. Keluar")
+
+            pilihan = input("Masukkan pilihan (0-7): ")
+
+            if pilihan == "1":
+                self.Menu_tambah_data()
+            elif pilihan == "2":
+                sort_by = input("Sort by (jenis_kendaraan, plat_nomor, bahan_bakar, tahun_pembuatan, kapasitas_tangki): ")
+                ascending_input = input("Ascending (y/n): ").lower()
+                ascending = True if ascending_input == 'y' else False
+                self.Lihat_data(sort_by, ascending)
+            elif pilihan == "3":
+                plat_nomor = input("Masukkan plat nomor kendaraan yang ingin diupdate: ")
+                new_bahan_bakar = input("Masukkan bahan bakar baru: ")
+                self.update_data(plat_nomor, new_bahan_bakar)
+            elif pilihan == "4":
+                plat_nomor = input("Masukkan plat nomor kendaraan yang ingin dihapus: ")
+                self.Menu_hapus_data(plat_nomor)
+            elif pilihan == "5":
+                jenis_kendaraan = input("Masukkan jenis kendaraan yang ingin dicari: ")
+                plat_nomor = input("Masukkan plat nomor kendaraan yang ingin dicari: ")
+                self.Cari_data(jenis_kendaraan, plat_nomor)
+            elif pilihan == "6":
+                self.Menu_tambah_di_posisi()
+            elif pilihan == "7":
+                search_key = input("Masukkan ID kendaraan yang ingin dicari: ")
+                search_by = input("Cari berdasarkan (id/nama): ")
+                self.Jump_Search(search_key, search_by)
+            elif pilihan == "0":
+                print("Terima kasih. Program selesai.")
+                break
+            else:
+                print("Pilihan tidak valid. Silakan coba lagi.")
+
+    def Menu_tambah_data(self):
+        jenis_kendaraan = input("Masukkan jenis kendaraan: ")
+        bahan_bakar = input("Masukkan bahan bakar: ")
+        plat_nomor = input("Masukkan plat nomor: ")
+        tahun_pembuatan = int(input("Masukkan tahun pembuatan: "))
+        kapasitas_tangki = float(input("Masukkan kapasitas tangki: "))
+        posisi = input("Masukkan posisi (awal, akhir, antara): ")
+        self.Tambah_data(jenis_kendaraan, bahan_bakar, plat_nomor, tahun_pembuatan, kapasitas_tangki, posisi)
+
+    def Menu_hapus_data(self, plat_nomor):
+        print("\n=== MENU HAPUS DATA ===")
+        print("1. Hapus di Awal")
+        print("2. Hapus di Akhir")
+        print("3. Hapus di Antara")
+
+        pilihan = input("Masukkan pilihan (1-3): ")
+
+        if pilihan == "1":
+            self.Hapus_data(plat_nomor, posisi="awal")
+        elif pilihan == "2":
+            self.Hapus_data(plat_nomor)
+        elif pilihan == "3":
+            self.Hapus_data(plat_nomor, posisi="antara")
+        else:
+            print("Pilihan tidak valid.")
+
+    def Menu_tambah_di_posisi(self):
+        jenis_kendaraan = input("Masukkan jenis kendaraan: ")
+        bahan_bakar = input("Masukkan bahan bakar: ")
+        plat_nomor = input("Masukkan plat nomor: ")
+        tahun_pembuatan = int(input("Masukkan tahun pembuatan: "))
+        kapasitas_tangki = float(input("Masukkan kapasitas tangki: "))
+        posisi = int(input("Masukkan posisi (1 untuk di awal): "))
+        self.Tambah_data_di_posisi(jenis_kendaraan, bahan_bakar, plat_nomor, tahun_pembuatan, kapasitas_tangki, posisi)
+    
+    def Jump_Search(self, key_id, key_name):
+        if not self.head:
+            print("Tidak ada data kendaraan.")
+            return
+
+        current_node = self.head
+        block_size = int(len(self) ** 0.5)
+        while current_node:
+            if current_node.data['plat_nomor'] == key_id and current_node.data['jenis_kendaraan'] == key_name:
+                data = current_node.data
+                print(f"Data ditemukan: Jenis: {data['jenis_kendaraan']}, Plat Nomor: {data['plat_nomor']}, Bahan Bakar: {data['bahan_bakar']}")
+                return
+            elif current_node.data['plat_nomor'] < key_id:
+                for _ in range(block_size):
+                    current_node = current_node.next_node
+                    if current_node is None:
+                        break
+            else:
+                while current_node.data['plat_nomor'] > key_id:
+                    current_node = current_node.next_node
+                    if current_node is None:
+                        break
+                break
+
+        print(f"Tidak ada data kendaraan dengan ID {key_id} dan nama {key_name}.")
+# Penggunaan program
+pertamina_program = PertaminaData()
+pertamina_program.Menu_utama()
