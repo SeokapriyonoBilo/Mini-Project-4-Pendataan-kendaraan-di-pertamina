@@ -2,6 +2,7 @@ Nama : Seokapriyono Bilo
 NIM : 2309116095
 Kelas : B
 ~~~~~~~~~~~
+
 class Node:
     def __init__(self, data=None):
         self.data = data
@@ -238,8 +239,8 @@ class PertaminaData:
             elif pilihan == "6":
                 self.Menu_tambah_di_posisi()
             elif pilihan == "7":
-                search_key = input("Masukkan ID kendaraan yang ingin dicari: ")
-                search_by = input("Cari berdasarkan (id/nama): ")
+                search_key = input("Masukkan plat kendaraan yang ingin dicari: ")
+                search_by = input("Cari berdasarkan (jenis): ")
                 self.Jump_Search(search_key, search_by)
             elif pilihan == "0":
                 print("Terima kasih. Program selesai.")
@@ -282,7 +283,7 @@ class PertaminaData:
         posisi = int(input("Masukkan posisi (1 untuk di awal): "))
         self.Tambah_data_di_posisi(jenis_kendaraan, bahan_bakar, plat_nomor, tahun_pembuatan, kapasitas_tangki, posisi)
     
-    def Jump_Search(self, key_id, key_name):
+    def Jump_Search(self, key_plat, key_jenis):
         if not self.head:
             print("Tidak ada data kendaraan.")
             return
@@ -290,23 +291,23 @@ class PertaminaData:
         current_node = self.head
         block_size = int(len(self) ** 0.5)
         while current_node:
-            if current_node.data['plat_nomor'] == key_id and current_node.data['jenis_kendaraan'] == key_name:
+            if current_node.data['plat_nomor'] == key_plat and current_node.data['jenis_kendaraan'] == key_plat:
                 data = current_node.data
                 print(f"Data ditemukan: Jenis: {data['jenis_kendaraan']}, Plat Nomor: {data['plat_nomor']}, Bahan Bakar: {data['bahan_bakar']}")
                 return
-            elif current_node.data['plat_nomor'] < key_id:
+            elif current_node.data['plat_nomor'] < key_plat:
                 for _ in range(block_size):
                     current_node = current_node.next_node
                     if current_node is None:
                         break
             else:
-                while current_node.data['plat_nomor'] > key_id:
+                while current_node.data['plat_nomor'] > key_plat:
                     current_node = current_node.next_node
                     if current_node is None:
                         break
                 break
 
-        print(f"Tidak ada data kendaraan dengan ID {key_id} dan nama {key_name}.")
+        print(f"Tidak ada data kendaraan dengan plat {key_plat} dan jenis {key_jenis}.")
 # Penggunaan program
 pertamina_program = PertaminaData()
 pertamina_program.Menu_utama()
